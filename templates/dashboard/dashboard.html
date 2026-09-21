@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+{% include "partials/navbar.html" %}
+
+<div class="container">
+  <div id="loading" class="text-muted">Loading...</div>
+
+  <div id="dashboard-content" class="d-none">
+    <h2 class="mb-1">Welcome, <span id="welcome-name"></span> 👋</h2>
+    <p class="text-muted mb-4">Here's an overview of your knowledge base.</p>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h6 class="text-muted">Documents</h6>
+          <h3 id="doc-count">—</h3>
+          <a href="/documents/" class="stretched-link"></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h6 class="text-muted">Chat Sessions</h6>
+          <h3 id="chat-count">—</h3>
+          <a href="/chat/" class="stretched-link"></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h6 class="text-muted">Account</h6>
+          <p class="mb-0" id="account-email">—</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/auth.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

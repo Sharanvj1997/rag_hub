@@ -17,9 +17,12 @@ User = get_user_model()
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_user(request):
+    print('calling register',request.data)
     serializer = RegisterSerializer(data=request.data)
+    
 
     if serializer.is_valid():
+        print('yes validated')
         user = serializer.save()
         return Response(
             {
@@ -70,6 +73,20 @@ def logout_user(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def current_user(request):
+    user = request.user
+    return Response({
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "profile_picture": user.profile_picture.url if user.profile_picture else None,
+    })
 
 # ---------- Page views (render templates that call the API via JS) ----------
 

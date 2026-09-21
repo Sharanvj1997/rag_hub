@@ -7,4 +7,5 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(), name="api-login"),
     path("login/refresh/", TokenRefreshView.as_view(), name="api-login-refresh"),
     path("logout/", views.logout_user, name="api-logout"),
+    path("me/", views.current_user, name="api-me"),
 ]

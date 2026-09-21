@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+{% include "partials/navbar.html" %}
+
+<div class="container">
+  <h2 class="mb-4">Documents</h2>
+
+  <div id="upload-status" class="alert d-none"></div>
+
+  <form id="upload-form" class="d-flex gap-2 mb-4">
+    <input type="file" id="file-input" class="form-control" accept=".pdf,.txt,.md" required>
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+
+  <div id="documents-list"></div>
+</div>
+
+<script src="{% static 'js/auth.js' %}"></script>
+<script src="{% static 'js/documents.js' %}"></script>
+{% endblock %}

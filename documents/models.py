@@ -1,37 +1,42 @@
-# from django.db import models
-# from django.contrib.auth.models import User
+from django.db import models
+from django.conf import settings
 
 
-# class Document(models.Model):
+class Document(models.Model):
 
-#     STATUS_CHOICES = [
-#         ("UPLOADED", "Uploaded"),
-#         ("PROCESSING", "Processing"),
-#         ("PROCESSED", "Processed"),
-#         ("FAILED", "Failed"),
-#     ]
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        PROCESSING = "processing", "Processing"
+        READY = "ready", "Ready"
+        FAILED = "failed", "Failed"
 
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name="documents"
-#     )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="documents",
+    )
 
-#     title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
 
-#     file = models.FileField(
-#         upload_to="documents/"
-#     )
+    file = models.FileField(upload_to="documents/%Y/%m/")
 
-#     status = models.CharField(
-#         max_length=20,
-#         choices=STATUS_CHOICES,
-#         default="UPLOADED"
-#     )
+    file_type = models.CharField(max_length=10)  # pdf, txt, md
 
-#     uploaded_at = models.DateTimeField(
-#         auto_now_add=True
-#     )
+    size_bytes = models.PositiveIntegerField(default=0)
 
-#     def __str__(self):
-#         return self.title
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+
+    error_message = models.TextField(blank=True, null=True)
+
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
+
+    def __str__(self):
+        return f"{self.title} ({self.owner.email})"

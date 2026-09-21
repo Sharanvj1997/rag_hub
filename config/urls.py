@@ -11,9 +11,12 @@ urlpatterns = [
     # page views
     path('register/', accounts_views.register_page, name='register-page'),
     path('login/', accounts_views.login_page, name='login-page'),
+    path('dashboard/', include('dashboard.urls')),
+    path('documents/', include('documents.urls')),
 
     # API
     path('api/accounts/', include('accounts.urls')),
+    path('api/documents/', include('documents.urls')),
 ]
 
 if settings.DEBUG:
