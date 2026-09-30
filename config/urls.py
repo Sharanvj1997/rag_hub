@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from accounts import views as accounts_views
+from chat import views as chat_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,6 +14,8 @@ urlpatterns = [
     path('login/', accounts_views.login_page, name='login-page'),
     path('dashboard/', include('dashboard.urls')),
     path('documents/', include('documents.urls')),
+    path('chat/', chat_views.chat_page, name='chat-page'),
+    path('api/chat/', include('chat.urls')),
 
     # API
     path('api/accounts/', include('accounts.urls')),
