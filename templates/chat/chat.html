@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+{% include "partials/navbar.html" with flush=True %}
+
+<style>
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; }
+  .chat-shell { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+  #messages, #session-list { overflow-y: auto; }
+</style>
+
+<div class="container-fluid chat-shell p-0">
+  <div class="row g-0 h-100">
+
+    <!-- Sidebar -->
+    <aside class="col-md-3 col-lg-2 border-end d-flex flex-column h-100 bg-white">
+      <div class="p-3 border-bottom">
+        <button id="new-chat-btn" class="btn btn-primary w-100">+ New Chat</button>
+      </div>
+      <div id="session-list" class="list-group list-group-flush flex-grow-1"></div>
+    </aside>
+
+    <!-- Main -->
+    <main class="col-md-9 col-lg-10 d-flex flex-column h-100">
+
+      <header class="d-flex align-items-center justify-content-between gap-3 px-4 py-2 border-bottom bg-white">
+        <div class="d-flex align-items-center gap-3 overflow-hidden">
+          <a href="/dashboard/" class="btn btn-outline-secondary btn-sm">&larr; Dashboard</a>
+          <h6 id="chat-title" class="mb-0 text-truncate">New chat</h6>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
+                  data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            Documents:
+            <span id="scope-label" class="d-inline-block text-truncate align-bottom"
+                  style="max-width: 180px;">All documents</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-3"
+               style="min-width: 300px; max-height: 360px; overflow-y: auto;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong class="small">Search in</strong>
+              <a href="#" id="clear-docs" class="small">Use all documents</a>
+            </div>
+            <div id="doc-menu-items"></div>
+            <p class="text-muted small mb-0 mt-2">Leave everything unticked to search all your documents.</p>
+          </div>
+        </div>
+      </header>
+
+      <div id="messages" class="flex-grow-1 p-4 bg-body-tertiary"></div>
+
+      <form id="chat-form" class="d-flex gap-2 p-3 border-top bg-white">
+        <input type="text" id="message-input" class="form-control"
+               placeholder="Ask something about your documents..." autocomplete="off" required>
+        <button type="submit" id="send-btn" class="btn btn-primary px-4">Send</button>
+      </form>
+
+    </main>
+  </div>
+</div>
+
+<script src="{% static 'js/auth.js' %}"></script>
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

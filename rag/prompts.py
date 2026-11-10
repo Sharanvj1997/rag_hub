@@ -1,32 +1,39 @@
-def build_rag_prompt(query, chunks, chat_history=None):
-    """
-    Builds a prompt combining retrieved context with the user's question.
-    chat_history: optional list of {"role": "user"/"assistant", "content": ...}
-    """
-
+def build_rag_prompt(query, chunks, chat_history=None, selected_titles=None):
     if not chunks:
-        context = "No relevant documents were found for this question."
+        context = "No relevant content was found in the user's documents for this question."
     else:
-        context_parts = []
+        parts = []
         for i, chunk in enumerate(chunks, 1):
-            context_parts.append(f"[Source {i}]\n{chunk['text']}")
-        context = "\n\n".join(context_parts)
+            title = chunk.get("title") or f"Document {chunk.get('document_id')}"
+            parts.append(f'[Source {i} - from "{title}"]\n{chunk["text"]}')
+        context = "\n\n".join(parts)
+
+    if selected_titles:
+        scope = "The user has selected these documents: " + ", ".join(f'"{t}"' for t in selected_titles) + "."
+    else:
+        scope = "The user is searching across all of their uploaded documents."
 
     history_text = ""
     if chat_history:
-        history_lines = []
+        lines = []
         for msg in chat_history:
-            role_label = "User" if msg["role"] == "user" else "Assistant"
-            history_lines.append(f"{role_label}: {msg['content']}")
-        history_text = "\n".join(history_lines) + "\n\n"
+            label = "User" if msg["role"] == "user" else "Assistant"
+            lines.append(f"{label}: {msg['content']}")
+        history_text = "Recent conversation:\n" + "\n".join(lines) + "\n\n"
 
-    prompt = f"""You are a helpful assistant answering questions based on the user's uploaded documents.
-Use only the information in the context below to answer. If the answer isn't in the context, say so honestly rather than making something up.
+    return f"""You are a helpful assistant that answers questions using the user's uploaded documents.
 
-Context from documents:
+{scope}
+The content of those documents is already provided below under "Context". You already have access to it.
+
+Rules:
+- NEVER ask the user to select, name, choose or upload a document. Just answer from the Context.
+- If the question is vague (for example "what about the document" or "tell me about it"), give a clear summary of the Context.
+- Use only the Context. If the answer is not in it, say so honestly instead of guessing.
+- Each source is labelled with its document. If sources come from different documents, say which document each detail comes from and never mix them up.
+
+Context:
 {context}
 
 {history_text}User: {query}
 Assistant:"""
-
-    return prompt

@@ -34,6 +34,7 @@ async function loginUser(email, password) {
     localStorage.setItem("access_token", data.access);
     localStorage.setItem("refresh_token", data.refresh);
     localStorage.setItem("user", JSON.stringify(data.user));
+    
   }
 
   return { ok: res.ok, data };

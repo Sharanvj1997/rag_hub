@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 class ChatSession(models.Model):
-    """A conversation thread, so a user can have multiple separate chats."""
+    """A conversation thread. Optionally scoped to specific documents."""
 
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -12,6 +12,13 @@ class ChatSession(models.Model):
     )
 
     title = models.CharField(max_length=255, default="New Chat")
+
+    # Empty selection means "search all of the user's documents"
+    documents = models.ManyToManyField(
+        "documents.Document",
+        blank=True,
+        related_name="chat_sessions",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -24,7 +31,7 @@ class ChatSession(models.Model):
 
 
 class Message(models.Model):
-    """A single message within a session — either from the user or the assistant."""
+    """A single message within a session, either from the user or the assistant."""
 
     class Role(models.TextChoices):
         USER = "user", "User"
@@ -40,8 +47,7 @@ class Message(models.Model):
 
     content = models.TextField()
 
-    # Stores which document chunks were used to answer this message,
-    # so citations can be shown later ("answered using: resume.pdf, chunk 3").
+    # Which document chunks were used to answer this message (for citations)
     source_chunks = models.JSONField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
