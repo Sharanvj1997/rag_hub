@@ -4,14 +4,15 @@
 
 {% include "partials/navbar.html" %}
 
-<div class="container">
-  <h2 class="mb-4">Documents</h2>
+<div class="container pb-5" style="max-width: 960px;">
+  <h1 class="h3 mb-1">Documents</h1>
+  <p class="text-muted mb-4">PDF, TXT or MD files up to 10 MB. Each file is read in the background. Once it shows Ready, you can chat with it.</p>
 
   <div id="upload-status" class="alert d-none"></div>
 
-  <form id="upload-form" class="d-flex gap-2 mb-4">
+  <form id="upload-form" class="panel p-3 d-flex flex-column flex-sm-row gap-2 mb-4">
     <input type="file" id="file-input" class="form-control" accept=".pdf,.txt,.md" required>
-    <button type="submit" class="btn btn-primary">Upload</button>
+    <button type="submit" class="btn btn-primary px-4">Upload</button>
   </form>
 
   <div id="documents-list"></div>

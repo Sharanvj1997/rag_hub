@@ -4,35 +4,25 @@
 
 {% include "partials/navbar.html" %}
 
-<div class="container">
+<div class="container pb-5" style="max-width: 960px;">
   <div id="loading" class="text-muted">Loading...</div>
 
   <div id="dashboard-content" class="d-none">
-    <h2 class="mb-1">Welcome, <span id="welcome-name"></span> 👋</h2>
-    <p class="text-muted mb-4">Here's an overview of your knowledge base.</p>
+    <h1 class="display-6 mb-1">Welcome back, <span id="welcome-name"></span></h1>
+    <p class="text-muted mb-4">Upload documents, then ask questions and see which file each answer came from.</p>
 
-    <div class="row g-3">
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h6 class="text-muted">Documents</h6>
-          <h3 id="doc-count">—</h3>
-          <a href="/documents/" class="stretched-link"></a>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h6 class="text-muted">Chat Sessions</h6>
-          <h3 id="chat-count">—</h3>
-          <a href="/chat/" class="stretched-link"></a>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h6 class="text-muted">Account</h6>
-          <p class="mb-0" id="account-email">—</p>
-        </div>
-      </div>
+    <div class="panel overview">
+      <a href="/documents/" class="overview-item">
+        <span class="overview-num" id="doc-count">0</span>
+        <span class="overview-label"><strong>Documents</strong><span>Upload and manage your files</span></span>
+      </a>
+      <a href="/chat/" class="overview-item">
+        <span class="overview-num" id="chat-count">0</span>
+        <span class="overview-label"><strong>Chats</strong><span>Continue or start a conversation</span></span>
+      </a>
     </div>
+
+    <p class="mt-4 mb-0 text-muted small">Signed in as <span id="account-email"></span></p>
   </div>
 </div>
 

@@ -6,9 +6,18 @@ let selectedDocIds = [];      // empty = search all documents
 let readyDocuments = [];
 let isStreaming = false;
 
+
+
 const byId = (id) => document.getElementById(id);
 
 // ---------- UI helpers ----------
+
+function closeSidebar() {
+  const el = byId("chat-side");
+  if (el && el.classList.contains("show")) {
+    bootstrap.Offcanvas.getOrCreateInstance(el).hide();
+  }
+}
 
 function scrollToBottom() {
   const box = byId("messages");
@@ -35,7 +44,14 @@ function showEmptyState() {
 }
 
 function setSources(el, titles) {
-  el.textContent = titles && titles.length ? `Sources: ${titles.join(", ")}` : "";
+  el.innerHTML = "";
+  el.className = "src-list";
+  (titles || []).forEach((t) => {
+    const chip = document.createElement("span");
+    chip.className = "src-chip";
+    chip.textContent = t;
+    el.appendChild(chip);
+  });
 }
 
 function titlesFromChunks(chunks) {
@@ -159,7 +175,10 @@ async function loadSessions() {
     const item = document.createElement("div");
     item.className = `list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isActive ? "active" : ""}`;
     item.style.cursor = "pointer";
-    item.addEventListener("click", () => selectSession(s.id));
+    item.addEventListener("click", () => {
+      closeSidebar();
+      selectSession(s.id);
+    });
 
     const title = document.createElement("span");
     title.className = "text-truncate";
@@ -316,6 +335,7 @@ async function sendMessage(text) {
   await Promise.all([loadSessions(), loadDocuments()]);
 
   byId("new-chat-btn").addEventListener("click", async () => {
+    closeSidebar();
     selectedDocIds = [];
     renderDocPicker();
     await createSession();

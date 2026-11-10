@@ -1,45 +1,53 @@
 {% extends "base.html" %}
 {% load static %}
+{% block body_class %}chat-page{% endblock %}
 {% block content %}
 
 {% include "partials/navbar.html" with flush=True %}
 
-<style>
-  html, body { height: 100%; }
-  body { display: flex; flex-direction: column; }
-  .chat-shell { flex: 1 1 auto; min-height: 0; overflow: hidden; }
-  #messages, #session-list { overflow-y: auto; }
-</style>
-
 <div class="container-fluid chat-shell p-0">
-  <div class="row g-0 h-100">
+  <div class="row g-0">
 
-    <!-- Sidebar -->
-    <aside class="col-md-3 col-lg-2 border-end d-flex flex-column h-100 bg-white">
-      <div class="p-3 border-bottom">
-        <button id="new-chat-btn" class="btn btn-primary w-100">+ New Chat</button>
+    <!-- History: sidebar on desktop, slide-in drawer on phones -->
+    <aside id="chat-side" class="offcanvas-md offcanvas-start col-md-3 col-lg-2 border-end"
+           tabindex="-1" aria-labelledby="chat-side-title">
+      <div class="offcanvas-header d-md-none border-bottom">
+        <h6 class="offcanvas-title" id="chat-side-title">Chat history</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                data-bs-target="#chat-side" aria-label="Close"></button>
       </div>
-      <div id="session-list" class="list-group list-group-flush flex-grow-1"></div>
+      <div class="offcanvas-body">
+        <div class="p-3 border-bottom">
+          <button id="new-chat-btn" class="btn btn-primary w-100">New chat</button>
+        </div>
+        <div id="session-list" class="list-group list-group-flush flex-grow-1"></div>
+      </div>
     </aside>
 
-    <!-- Main -->
-    <main class="col-md-9 col-lg-10 d-flex flex-column h-100">
+    <main id="chat-main" class="col-12 col-md-9 col-lg-10 d-flex flex-column">
 
-      <header class="d-flex align-items-center justify-content-between gap-3 px-4 py-2 border-bottom bg-white">
-        <div class="d-flex align-items-center gap-3 overflow-hidden">
-          <a href="/dashboard/" class="btn btn-outline-secondary btn-sm">&larr; Dashboard</a>
-          <h6 id="chat-title" class="mb-0 text-truncate">New chat</h6>
-        </div>
+      <header class="d-flex align-items-center gap-2 px-2 px-md-4 py-2 border-bottom bg-white">
+        <button class="btn btn-outline-secondary btn-sm d-md-none d-inline-flex align-items-center gap-1 flex-shrink-0"
+                type="button" data-bs-toggle="offcanvas" data-bs-target="#chat-side"
+                aria-controls="chat-side">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+          </svg>
+          History
+        </button>
 
-        <div class="dropdown">
+        <a href="/dashboard/" class="btn btn-outline-secondary btn-sm flex-shrink-0" aria-label="Back to dashboard">
+          &larr;<span class="d-none d-sm-inline"> Dashboard</span>
+        </a>
+
+        <h6 id="chat-title" class="mb-0 text-truncate flex-grow-1" style="min-width: 0;">New chat</h6>
+
+        <div class="dropdown flex-shrink-0">
           <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
                   data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-            Documents:
-            <span id="scope-label" class="d-inline-block text-truncate align-bottom"
-                  style="max-width: 180px;">All documents</span>
+            <span class="d-none d-sm-inline">Documents: </span><span id="scope-label" class="d-inline-block text-truncate align-bottom">All documents</span>
           </button>
-          <div class="dropdown-menu dropdown-menu-end p-3"
-               style="min-width: 300px; max-height: 360px; overflow-y: auto;">
+          <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 280px; max-height: 360px; overflow-y: auto;">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <strong class="small">Search in</strong>
               <a href="#" id="clear-docs" class="small">Use all documents</a>
@@ -50,11 +58,11 @@
         </div>
       </header>
 
-      <div id="messages" class="flex-grow-1 p-4 bg-body-tertiary"></div>
+      <div id="messages" class="flex-grow-1 p-3 p-md-4"></div>
 
       <form id="chat-form" class="d-flex gap-2 p-3 border-top bg-white">
         <input type="text" id="message-input" class="form-control"
-               placeholder="Ask something about your documents..." autocomplete="off" required>
+               placeholder="Ask something about your documents" autocomplete="off" required>
         <button type="submit" id="send-btn" class="btn btn-primary px-4">Send</button>
       </form>
 
