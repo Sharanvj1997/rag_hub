@@ -101,11 +101,20 @@ function renderDocuments(documents) {
   });
 }
 
-async function loadDocuments() {
+let pollTimer = null;
+
+async function loadDocuments(showLoading = true) {
   const listEl = document.getElementById("documents-list");
-  listEl.innerHTML = `<p class="text-muted">Loading documents...</p>`;
+  if (showLoading) listEl.innerHTML = `<p class="text-muted">Loading documents...</p>`;
+
   const docs = await fetchDocuments();
   renderDocuments(docs);
+
+  // While anything is still being processed, check again every 3 seconds
+  clearTimeout(pollTimer);
+  if (docs.some((d) => d.status === "pending" || d.status === "processing")) {
+    pollTimer = setTimeout(() => loadDocuments(false), 3000);
+  }
 }
 
 (async function initDocumentsPage() {

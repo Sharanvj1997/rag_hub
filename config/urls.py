@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 from accounts import views as accounts_views
 from chat import views as chat_views
+from dashboard import views as dashboard_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -20,6 +21,7 @@ urlpatterns = [
     # API
     path('api/accounts/', include('accounts.urls')),
     path('api/documents/', include('documents.urls')),
+    path('api/dashboard/stats/', dashboard_views.stats, name='api-dashboard-stats'),
 ]
 
 if settings.DEBUG:

@@ -35,6 +35,18 @@ def upload_document(request):
 
     if serializer.is_valid():
         document = serializer.save()
+
+        try:
+            process_document_task.delay(document.id)
+        except Exception:
+            # Redis/Celery is down: keep the upload, but tell the user clearly
+            document.status = Document.Status.FAILED
+            document.error_message = (
+                "Background worker unavailable. Start Redis (Memurai) and the "
+                "Celery worker, then retry."
+            )
+            document.save(update_fields=["status", "error_message"])
+
         return Response(
             {
                 "success": True,

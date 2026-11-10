@@ -8,8 +8,12 @@
   document.getElementById("welcome-name").textContent = user.first_name || user.username;
   document.getElementById("account-email").textContent = user.email;
 
-  document.getElementById("doc-count").textContent = "0";
-  document.getElementById("chat-count").textContent = "0";
+  const res = await apiRequest("/api/dashboard/stats/");
+  if (res.ok) {
+    const { data } = await res.json();
+    document.getElementById("doc-count").textContent = data.documents;
+    document.getElementById("chat-count").textContent = data.chat_sessions;
+  }
 
   document.getElementById("loading").classList.add("d-none");
   document.getElementById("dashboard-content").classList.remove("d-none");
